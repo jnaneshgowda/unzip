@@ -1,6 +1,6 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
-from Unzip.config import AUTH_CHANNEL
+from Unzip.config import config
 from pyrogram.errors import UserNotParticipant, Exception
 
 active_tasks = {}

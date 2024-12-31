@@ -1,10 +1,3 @@
-# ©️ LISA-KOREA | @LISA_FAN_LK | NT_BOT_CHANNEL | LISA-KOREA/UnZip-Bot
-
-# [⚠️ Do not change this repo link ⚠️] :- https://github.com/LISA-KOREA/UnZip-Bot
-
-
-
-
 import os
 import time
 import shutil
@@ -20,6 +13,11 @@ active_tasks = {}
 async def handle_file(client, message):
     user_id = message.from_user.id
     document = message.document
+
+    # Check if the user already has an active task
+    if user_id in active_tasks:
+        await message.reply("⚠️ You already have an active task. Please wait for the current task to finish.")
+        return
 
     if document.mime_type == 'application/zip':
         download_message = None
@@ -41,7 +39,7 @@ async def handle_file(client, message):
             os.makedirs(unzip_dir, exist_ok=True)
 
             task = asyncio.create_task(extract_and_send_files(client, message, file_path, unzip_dir, download_message, start))
-            active_tasks[user_id] = task
+            active_tasks[user_id] = task  # Add the task to the active tasks dictionary
 
             await task
 
@@ -56,7 +54,7 @@ async def handle_file(client, message):
                 os.remove(file_path)
             if unzip_dir and os.path.exists(unzip_dir):
                 shutil.rmtree(unzip_dir)
-            active_tasks.pop(user_id, None)
+            active_tasks.pop(user_id, None)  # Remove the task from active tasks after completion
 
     else:
         await message.reply("⚠️ Please send a valid ZIP file.")
@@ -79,5 +77,3 @@ async def extract_and_send_files(client, message, file_path, unzip_dir, download
             )
 
     await download_message.edit("✅ All files have been extracted and sent successfully.")
-
-

@@ -3,13 +3,13 @@
 
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
-from Config import Config
+from config import config
 
 active_tasks = {}
 
 # Function to check if a user is subscribed to all required channels
 async def is_subscribed(client, user_id):
-    for channel_id in Config.FORCE_SUB_CHANNELS:
+    for channel_id in config.FORCE_SUB_CHANNELS:
         try:
             user_status = await client.get_chat_member(channel_id, user_id)
             if user_status.status not in ["member", "administrator", "creator"]:

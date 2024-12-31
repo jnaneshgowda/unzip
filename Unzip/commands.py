@@ -1,61 +1,53 @@
-# ©️ LISA-KOREA | @LISA_FAN_LK | NT_BOT_CHANNEL | LISA-KOREA/UnZip-Bot
-# [⚠️ Do not change this repo link ⚠️] :- https://github.com/LISA-KOREA/UnZip-Bot
-
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
-from Unzip.config import config
+from Unzip.config import AUTH_CHANNEL
+from pyrogram.errors import UserNotParticipant, Exception
 
 active_tasks = {}
 
-# Function to check if a user is subscribed to all required channels
-async def is_subscribed(client, user_id):
-    for channel_id in config.FORCE_SUB_CHANNELS:
+async def is_subscribed(bot, query, channel):
+    btn = []
+    for id in channel:
+        chat = await bot.get_chat(int(id))
         try:
-            user_status = await client.get_chat_member(channel_id, user_id)
-            if user_status.status not in ["member", "administrator", "creator"]:
-                return False
-        except Exception:
-            return False
-    return True
-
+            await bot.get_chat_member(id, query.from_user.id)
+        except UserNotParticipant:
+            btn.append([InlineKeyboardButton(f'Join {chat.title}', url=chat.invite_link)])
+        except Exception as e:
+            print(f"Error checking subscription for {id}: {e}")
+    return btn
 
 @Client.on_message(filters.command("start"))
 async def start(client, message):
-    user_id = message.from_user.id
-
-    # Check if the user is subscribed
-    if not await is_subscribed(client, user_id):
-        reply_markup = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton("📍 Join Channel 1", url="https://t.me/NT_BOT_CHANNEL"),
-                ],
-                [
-                    InlineKeyboardButton("📍 Join Channel 2", url="https://t.me/Another_Channel"),
-                ],
-            ]
-        )
-        await message.reply(
-            "⚠️ To use this bot, you must join our channels first.\n\n"
-            "👉 [Channel 1](https://t.me/NT_BOT_CHANNEL)\n"
-            "👉 [Channel 2](https://t.me/Another_Channel)\n\n"
-            "After joining, press /start again.",
-            reply_markup=reply_markup,
-            disable_web_page_preview=True,
-        )
+    if not AUTH_CHANNEL:
+        await message.reply("No channels to subscribe to. Please check the configuration.")
         return
 
-    # If subscribed, send the start message
+    try:
+        btn = await is_subscribed(client, message, AUTH_CHANNEL)
+        if btn:
+            username = (await client.get_me()).username
+            if len(message.command) > 1:
+                btn.append([InlineKeyboardButton("♻️ Try Again ♻️", url=f"https://t.me/{username}?start={message.command[1]}")])
+            else:
+                btn.append([InlineKeyboardButton("♻️ Try Again ♻️", url=f"https://t.me/{username}?start=true")])
+            await message.reply_text(text=f"<b>👋 Hello {message.from_user.mention},\n\nPlease join the channel then click on try again button. 😇</b>", reply_markup=InlineKeyboardMarkup(btn))
+            return
+        else:
+            await message.reply("Please subscribe to the required channels to proceed.")
+    except Exception as e:
+        print(e)
+
     reply_markup = InlineKeyboardMarkup(
+    [
         [
-            [
-                InlineKeyboardButton("📍 Update Channel", url="https://t.me/NT_BOT_CHANNEL"),
-            ],
-            [
-                InlineKeyboardButton("👥 Support Group", url="https://t.me/NT_BOTS_SUPPORT"),
-                InlineKeyboardButton("👩‍💻 Developer", url="https://t.me/LISA_FAN_LK"),
-            ],
-        ]
+            InlineKeyboardButton("📍 Update Channel", url="https://t.me/NT_BOT_CHANNEL"),
+        ],
+        [
+            InlineKeyboardButton("👥 Support Group", url="https://t.me/NT_BOTS_SUPPORT"),
+            InlineKeyboardButton("👩‍💻 Developer", url="https://t.me/LISA_FAN_LK"),
+        ] 
+    ]
     )
     start_message = (
         "Hello!\n\n"
@@ -63,34 +55,13 @@ async def start(client, message):
     )
     await message.reply(start_message, reply_markup=reply_markup)
 
+# Callback query handler
+@Client.on_callback_query(filters.regex("cancel"))
+async def cancel(client, callback_query):
+    await callback_query.message.delete()
 
 @Client.on_message(filters.command("help"))
 async def help_command(client, message):
-    user_id = message.from_user.id
-
-    # Check if the user is subscribed
-    if not await is_subscribed(client, user_id):
-        reply_markup = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton("📍 Join Channel 1", url="https://t.me/NT_BOT_CHANNEL"),
-                ],
-                [
-                    InlineKeyboardButton("📍 Join Channel 2", url="https://t.me/Another_Channel"),
-                ],
-            ]
-        )
-        await message.reply(
-            "⚠️ To use this bot, you must join our channels first.\n\n"
-            "👉 [Channel 1](https://t.me/NT_BOT_CHANNEL)\n"
-            "👉 [Channel 2](https://t.me/Another_Channel)\n\n"
-            "After joining, press /help again.",
-            reply_markup=reply_markup,
-            disable_web_page_preview=True,
-        )
-        return
-
-    # If subscribed, send the help message
     help_message = (
         "Here are the commands you can use:\n\n"
         "/start - Start the bot and get the welcome message\n"
@@ -99,12 +70,6 @@ async def help_command(client, message):
         "©️ Channel : @NT_BOT_CHANNEL"
     )
     await message.reply(help_message)
-
-
-@Client.on_callback_query(filters.regex("cancel"))
-async def cancel(client, callback_query):
-    await callback_query.message.delete()
-
 
 @Client.on_callback_query(filters.regex("cancel_unzip"))
 async def cancel_callback(client, callback_query):

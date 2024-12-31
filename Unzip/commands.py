@@ -12,7 +12,7 @@ async def is_subscribed(bot, query, channel):
         try:
             await bot.get_chat_member(id, query.from_user.id)
         except UserNotParticipant:
-            btn.append([InlineKeyboardButton(f'Join {chat.title}', url=chat.invite_link)])
+            btn.append([InlineKeyboardButton(f'Join channel', url=chat.invite_link)])
         except Exception as e:
             print(f"Error checking subscription for {id}: {e}")
     return btn
@@ -28,28 +28,27 @@ async def start(client, message):
         if btn:
             username = (await client.get_me()).username
 
-            new_button = [InlineKeyboardButton("📢 join channel ", url="https://t.me/JN2FLIX")]
+            new_button = [InlineKeyboardButton("join channel ", url="https://t.me/JN2FLIX")]
             btn.insert(0, new_button)  # Adds the new button at the beginning of the list
     
             if len(message.command) > 1:
                 btn.append([InlineKeyboardButton("♻️ Try Again ♻️", url=f"https://t.me/{username}?start={message.command[1]}")])
             else:
                 btn.append([InlineKeyboardButton("♻️ Try Again ♻️", url=f"https://t.me/{username}?start=true")])
-            await message.reply_text(text=f"<b>👋 Hello {message.from_user.mention},\n\nPlease join the channel then click on try again button. 😇</b>", reply_markup=InlineKeyboardMarkup(btn))
+            await message.reply_text(text=f"<b>👋 Hello {message.from_user.mention},\n\nPlease join below 2 channel to use me\n\nafter join click ♻️ Try Again ♻️</b>", reply_markup=InlineKeyboardMarkup(btn))
             return
         else:
-            await message.reply("Please subscribe to the required channels to proceed.")
+            await message.reply("You can now use the bot.")
     except Exception as e:
         print(e)
 
     reply_markup = InlineKeyboardMarkup(
     [
         [
-            InlineKeyboardButton("📍 Update Channel", url="https://t.me/NT_BOT_CHANNEL"),
+            InlineKeyboardButton("main update Channel", url="https://t.me/JN2FLIX"),
         ],
         [
-            InlineKeyboardButton("👥 Support Group", url="https://t.me/NT_BOTS_SUPPORT"),
-            InlineKeyboardButton("👩‍💻 Developer", url="https://t.me/LISA_FAN_LK"),
+            InlineKeyboardButton("bots Update Channel", url="https://t.me/ROCKERSBACKUP"),
         ] 
     ]
     )
@@ -71,7 +70,7 @@ async def help_command(client, message):
         "/start - Start the bot and get the welcome message\n"
         "/help - Get help on how to use the bot\n\n"
         "To unzip a file, simply send me a ZIP file and I will extract its contents and send them back to you.\n\n"
-        "©️ Channel : @NT_BOT_CHANNEL"
+        "©️ Channel : @ROCKERSBACKUP @JN2FLIX"
     )
     await message.reply(help_message)
 

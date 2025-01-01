@@ -1,6 +1,6 @@
 import time  # Add this import at the top of your file
 from pymongo import MongoClient
-from pyrogram import Client, filters
+from pyrogram import Client
 from Unzip.config import config
 import asyncio
 
@@ -42,42 +42,6 @@ async def broadcast_progress(current, total, message, start_time):
     
     # Update the message with progress
     await message.edit(progress_message)
-
-# Command to track new users
-@app.on_message(filters.command("start"))
-async def start(client, message):
-    user_id = message.from_user.id
-    add_user_id(user_id)
-    await message.reply("Welcome! You will now receive updates.")
-
-# Broadcast command handler
-@app.on_message(filters.command("broadcast") & filters.user(OWNER_ID))
-async def broadcast(client, message):
-    if len(message.command) < 2:
-        await message.reply("Please provide a message to broadcast.")
-        return
-
-    broadcast_message = message.text.split(None, 1)[1]
-    
-    # Get the list of user IDs to send the broadcast message to
-    user_ids = get_all_user_ids()
-
-    total_users = len(user_ids)
-    current = 0
-
-    # Send the broadcast message to all users
-    start_time = time.time()
-    progress_message = await message.reply("Starting broadcast...")
-
-    for user_id in user_ids:
-        try:
-            await client.send_message(user_id, broadcast_message)
-            current += 1
-            await broadcast_progress(current, total_users, progress_message, start_time)
-        except Exception as e:
-            print(f"Failed to send message to {user_id}: {e}")
-
-    await progress_message.edit("✅ Broadcast completed.")
 
 # Start the bot
 print("🎊 I AM ALIVE 🎊  • Support @NT_BOTS_SUPPORT")

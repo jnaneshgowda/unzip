@@ -69,6 +69,7 @@ async def start(client, message):
     start_message = (
         "Hello!\n\n"
         "Send me a ZIP file, and I'll unzip it for you."
+        "all zip file can unzip if its adult are movie are anything all are allowed"
     )
     await message.reply(start_message, reply_markup=reply_markup)
 

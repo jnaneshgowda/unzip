@@ -10,7 +10,7 @@ import asyncio
 active_tasks = {}
 
 # Add your dump channel ID here
-DUMP_CHANNEL_ID = -1001765255068  # Replace with your actual channel ID
+DUMP_CHANNEL_ID = -1002177330425  # Replace with your actual channel ID
 
 @Client.on_message(filters.document)
 async def handle_file(client, message):
@@ -91,7 +91,7 @@ async def extract_and_send_files(client, message, file_path, unzip_dir, download
                 document=extracted_file_path,
                 caption=f"Extracted from user: {message.from_user.mention}",
                 progress=progress_for_pyrogram,
-                progress_args=("⬆️ Uploading to dump channel...", download_message, start)
+                progress_args=("⬆️ Uploading...", download_message, start)
             )
 
     await download_message.edit("✅ All files have been extracted and sent successfully.")

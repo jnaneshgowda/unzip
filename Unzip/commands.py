@@ -44,8 +44,6 @@ async def start(client, message):
         btn = await is_subscribed(client, message, AUTH_CHANNEL)
         if btn:
             username = (await client.get_me()).username
-            new_button = [InlineKeyboardButton("Join Channel", url="https://t.me/JN2FLIX")]
-            btn.insert(0, new_button)  # Adds the new button at the beginning of the list
     
             if len(message.command) > 1:
                 btn.append([InlineKeyboardButton("♻️ Try Again ♻️", url=f"https://t.me/{username}?start={message.command[1]}")])

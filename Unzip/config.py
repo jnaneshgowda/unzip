@@ -14,5 +14,4 @@ class config(object):
     BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
     API_ID = int(os.environ.get("API_ID", "0"))
     API_HASH = os.environ.get("API_HASH", "")
-
-    
+    MONGO_URL = os.environ.get("MONGO_URL", "mongodb+srv://telegram:telegram@cluster0.ubgb2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")

@@ -6,7 +6,7 @@ from pyrogram.errors import UserNotParticipant
 import time
 
 # MongoDB connection setup
-client = MongoClient("mongodb+srv://telegram:telegram@cluster0.ubgb2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")  # Replace with your MongoDB URL
+client = MongoClient(config.MONGO_URL)  # Use MongoDB URL from the config with your MongoDB URL
 db = client["unzip_bot"]  # Database name
 users_collection = db["users"]  # Collection to store user data
 

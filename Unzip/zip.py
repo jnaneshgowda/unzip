@@ -19,6 +19,9 @@ async def handle_file(client, message):
         await message.reply("⚠️ You already have an active task. Please wait for the current task to finish.")
         return
 
+    # Add the user to active tasks immediately
+    active_tasks[user_id] = None
+
     if document.mime_type == 'application/zip':
         download_message = None
         file_path = None
@@ -39,7 +42,7 @@ async def handle_file(client, message):
             os.makedirs(unzip_dir, exist_ok=True)
 
             task = asyncio.create_task(extract_and_send_files(client, message, file_path, unzip_dir, download_message, start))
-            active_tasks[user_id] = task  # Add the task to the active tasks dictionary
+            active_tasks[user_id] = task  # Update the task in active tasks dictionary
 
             await task
 
@@ -54,10 +57,11 @@ async def handle_file(client, message):
                 os.remove(file_path)
             if unzip_dir and os.path.exists(unzip_dir):
                 shutil.rmtree(unzip_dir)
-            active_tasks.pop(user_id, None)  # Remove the task from active tasks after completion
+            active_tasks.pop(user_id, None)  # Ensure the task is removed from active tasks
 
     else:
         await message.reply("⚠️ Please send a valid ZIP file.")
+        active_tasks.pop(user_id, None)  # Remove the user from active tasks if invalid file
 
 
 async def extract_and_send_files(client, message, file_path, unzip_dir, download_message, start):

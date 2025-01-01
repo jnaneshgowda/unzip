@@ -10,8 +10,11 @@ AUTH_CHANNEL = [
     for ch in environ.get('AUTH_CHANNEL', '-1001764441595 -1002135593873').split()
 ]
 
+# Define MONGO_URL at the module level
+MONGO_URL = os.environ.get("MONGO_URL", "")  # Fetch MongoDB URL from environment variables
+
 class config(object):
     BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
     API_ID = int(os.environ.get("API_ID", "0"))
     API_HASH = os.environ.get("API_HASH", "")
-    MONGO_URL = os.environ.get("MONGO_URL", "")
+    # MONGO_URL is now defined at the module level, so no need to include it in the class

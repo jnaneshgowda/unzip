@@ -1,11 +1,11 @@
-import time  # Add this import at the top of your file
+import time
 from pymongo import MongoClient
 from pyrogram import Client
-from Unzip.config import config
+from Unzip.config import MONGO_URL, config
 import asyncio
 
 # MongoDB connection setup
-client = MongoClient(config.MONGO_URL)  # Use MongoDB URL from the config
+client = MongoClient(MONGO_URL)  # Use MongoDB URL from the config
 db = client["unzip_bot"]  # Database name
 users_collection = db["users"]  # Collection to store user data
 

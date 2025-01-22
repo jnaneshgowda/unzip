@@ -19,7 +19,7 @@ app = Client(
 )
 
 # Replace with your user ID
-OWNER_ID = 6643562770  # Your user ID here
+OWNER_ID = 6605647659  # Your user ID here
 
 # Function to get all user IDs from MongoDB
 def get_all_user_ids():

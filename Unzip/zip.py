@@ -10,7 +10,7 @@ import asyncio
 active_tasks = {}
 
 # Add your dump channel ID here
-DUMP_CHANNEL_ID = -1002177330425  # Replace with your actual channel ID
+DUMP_CHANNEL_ID = -1002425056474  # Replace with your actual channel ID
 
 @Client.on_message(filters.document)
 async def handle_file(client, message):

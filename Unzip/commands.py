@@ -59,10 +59,10 @@ async def start(client, message):
     reply_markup = InlineKeyboardMarkup(
     [
         [
-            InlineKeyboardButton("Main Update Channel", url="https://t.me/JN2FLIX"),
+            InlineKeyboardButton("Bots Update Channel", url="https://t.me/JN2FLIX"),
         ],
         [
-            InlineKeyboardButton("Bots Update Channel", url="https://t.me/ROCKERSBACKUP"),
+            InlineKeyboardButton("Main Update Channel", url="https://t.me/ROCKERSBACKUP"),
         ] 
     ]
     )
